@@ -5,6 +5,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Login from "./pages/Login.tsx";
+import Signup from "./pages/Signup.tsx";
+import Onboarding from "./pages/Onboarding.tsx";
+import AppLayout from "./pages/AppLayout.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import Today from "./pages/Today.tsx";
+import Workflows from "./pages/Workflows.tsx";
+import Activity from "./pages/Activity.tsx";
+import Settings from "./pages/Settings.tsx";
+import { ChatbotButton } from "./components/features/ChatbotButton";
 
 const queryClient = new QueryClient();
 
@@ -16,9 +26,20 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route element={<AppLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/today" element={<Today />} />
+            <Route path="/workflows" element={<Workflows />} />
+            <Route path="/activity" element={<Activity />} />
+            <Route path="/settings" element={<Settings />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatbotButton />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
