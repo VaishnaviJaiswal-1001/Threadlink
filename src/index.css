@@ -42,7 +42,7 @@
     --brand-yellow: 49 100% 48%;    /* #F5C800 */
     --brand-green: 130 62% 44%;     /* #2BB74A */
     --brand-blue: 218 91% 53%;      /* #1A6CF5 */
-    --gradient-brand: linear-gradient(90deg, #E8381A 0%, #F5861A 25%, #F5C800 50%, #2BB74A 75%, #1A6CF5 100%);
+    --gradient-brand: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #334155 100%);
 
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
     --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
