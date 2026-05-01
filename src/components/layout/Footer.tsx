@@ -4,7 +4,7 @@ export const Footer = () => (
   <footer className="border-t border-border bg-surface mt-24">
     <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8">
       <div>
-        <img src={logo} alt="Threadlink" className="h-8 w-auto mb-3" />
+        <img src={logo} alt="Threadlink" className="h-12 w-auto mb-3" />
         <p className="text-[13px] text-text-secondary leading-relaxed">
           Connect. Automate. Focus. Achieve.
         </p>
