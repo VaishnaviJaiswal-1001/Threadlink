@@ -20,7 +20,7 @@ export const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto h-16 px-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Threadlink" className="h-8 w-auto" />
+          <img src={logo} alt="Threadlink" className="h-12 w-auto" />
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-[14px] text-text-secondary">
           <a href="#features" className="hover:text-foreground transition-colors">Features</a>

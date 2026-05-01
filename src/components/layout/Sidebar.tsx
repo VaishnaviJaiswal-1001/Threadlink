@@ -20,7 +20,7 @@ export const Sidebar = () => {
   const Inner = () => (
     <div className="flex flex-col h-full bg-card">
       <div className="px-5 h-16 flex items-center border-b border-border">
-        <img src={logo} alt="Threadlink" className="h-7 w-auto" />
+        <img src={logo} alt="Threadlink" className="h-10 w-auto" />
       </div>
       <nav className="flex-1 p-3 space-y-1">
         {items.map(({ label, href, Icon }) => {
