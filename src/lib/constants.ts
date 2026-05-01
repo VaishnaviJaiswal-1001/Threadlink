@@ -7,7 +7,7 @@ export const BRAND = {
   green: "#2BB74A",
   blue: "#1A6CF5",
   gradient:
-    "linear-gradient(90deg, #E8381A 0%, #F5861A 25%, #F5C800 50%, #2BB74A 75%, #1A6CF5 100%)",
+    "linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
 };
 
 export const APPS = [
