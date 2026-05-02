@@ -4,6 +4,13 @@ const Task = require('../models/Task');
 const Workflow = require('../models/Workflow');
 const ConnectedApp = require('../models/ConnectedApp');
 
+const { OpenAI } = require('openai');
+
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1"
+});
+
 const chatWithAI = asyncHandler(async (req, res) => {
   const { message } = req.body;
   if (!message) {
@@ -30,7 +37,7 @@ ${JSON.stringify(workflows.map(w => ({ name: w.name, trigger: w.trigger.app, act
 
   const prompt = `
 You are Threadlink AI, the helpful, intelligent assistant for the Threadlink platform. 
-Threadlink is an AI-powered automation engine that connects Gmail, Google Calendar, Slack, and Drive to extract tasks and automate workflows.
+Threadlink is an AI-powered automation engine that connects Gmail and Google Calendar to extract tasks and automate workflows.
 Your job is to answer user queries, act as an assistant, and help them understand their data or the platform.
 
 ${contextStr}
@@ -41,22 +48,14 @@ Keep your response concise, friendly, and helpful. Do NOT output JSON, just conv
   `;
 
   try {
-    const response = await fetch('http://127.0.0.1:11434/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'llama3', // or mistral depending on local
-        prompt: prompt,
-        stream: false,
-      }),
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to reach AI model');
-    }
-
-    const aiRes = await response.json();
-    return res.json(ApiResponse.success({ reply: aiRes.response }));
+    const aiRes = response.choices[0].message.content;
+    return res.json(ApiResponse.success({ reply: aiRes }));
   } catch (error) {
     console.error('AI Chat Error:', error);
     return res.status(500).json(ApiResponse.error(500, 'AI Service Unavailable'));

@@ -77,7 +77,7 @@ export const AuthCard = ({ mode }: AuthCardProps) => {
             </p>
 
             <a
-              href="http://localhost:5000/api/auth/google"
+              href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/auth/google`}
               className="mt-6 w-full h-11 rounded-md border border-border bg-card hover:bg-surface hover:shadow-card-sm transition-all flex items-center justify-center gap-3 text-[14px] font-medium relative"
             >
               <GoogleIcon />

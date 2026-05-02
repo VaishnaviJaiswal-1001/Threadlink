@@ -21,12 +21,10 @@ const generateDayTasks = async (userId) => {
 const { OpenAI } = require('openai');
 const logger = require('../utils/logger');
 
-let openai;
-if (process.env.OPENAI_API_KEY) {
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-}
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1"
+});
 
 const parseEmailWithAI = async (subject, body, from, workflows = []) => {
   try {
@@ -60,27 +58,18 @@ const parseEmailWithAI = async (subject, body, from, workflows = []) => {
     Current Date: ${new Date().toISOString()} (IMPORTANT: Use this year/month/date if the email mentions relative dates like "tomorrow" or missing years like "May 15th").
     `;
 
-    const response = await fetch('http://127.0.0.1:11434/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'llama3', // you can change this to 'mistral' or whatever model you pull
-        prompt: prompt,
-        stream: false,
-        format: 'json'
-      })
+    const response = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
+      temperature: 0.1,
     });
 
-    if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const parsed = JSON.parse(data.response);
+    const parsed = JSON.parse(response.choices[0].message.content);
     return parsed;
   } catch (error) {
-    logger.error('Error parsing email with Ollama:', error.message);
-    // Fallback to simulation if Ollama isn't running
+    logger.error('Error parsing email with Groq:', error.message);
+    // Fallback to simulation if Groq fails
     return {
       category: 'Task',
       summary: `Email from ${from} regarding ${subject}`,
