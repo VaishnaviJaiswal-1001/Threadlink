@@ -38,7 +38,7 @@ const getInbox = async (userId, pageToken) => {
   const gmail = await getGmailClientForUser(userId);
   const response = await gmail.users.messages.list({
     userId: 'me',
-    maxResults: 20,
+    maxResults: 50,
     pageToken,
     labelIds: ['INBOX']
   });

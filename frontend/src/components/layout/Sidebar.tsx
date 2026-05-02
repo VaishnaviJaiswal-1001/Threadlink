@@ -72,10 +72,25 @@ export const Sidebar = () => {
               {connectedApps.map((app) => {
                 const Icon = app.icon;
                 return (
-                  <div key={app.id} className="flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium text-text-secondary">
-                    <Icon className="h-[18px] w-[18px]" style={{ color: app.color }} />
-                    <span>{app.name}</span>
-                  </div>
+                  <NavLink
+                    key={app.id}
+                    to={`/apps/${app.id}`}
+                    onClick={() => setOpen(false)}
+                    className={({ isActive }) => cn(
+                      "relative flex items-center gap-3 px-3 py-2.5 rounded-md text-[14px] font-medium transition-colors",
+                      isActive ? "bg-elevated" : "text-text-secondary hover:text-foreground hover:bg-surface"
+                    )}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-gradient-brand" />
+                        )}
+                        <Icon className={cn("h-[18px] w-[18px]", isActive && "text-foreground")} style={isActive ? {} : { color: app.color }} />
+                        <span className={cn(isActive && "text-gradient-brand font-semibold")}>{app.name}</span>
+                      </>
+                    )}
+                  </NavLink>
                 );
               })}
             </div>

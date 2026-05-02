@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Task } from "@/lib/mockData";
 import { PriorityBadge, SourcePill } from "./PriorityBadges";
 
-export const TaskCard = ({ task }: { task: Task }) => {
+export const TaskCard = ({ task, onClick }: { task: Task; onClick?: () => void }) => {
   const [done, setDone] = useState(!!task.done);
   const [flash, setFlash] = useState(false);
 
@@ -21,13 +21,18 @@ export const TaskCard = ({ task }: { task: Task }) => {
     <motion.div
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
+      onClick={onClick}
       className={cn(
         "group bg-card border border-border rounded-xl p-4 shadow-card-sm hover:shadow-card-md flex items-start gap-3",
+        onClick && "cursor-pointer",
         flash && "animate-green-flash",
       )}
     >
       <button
-        onClick={toggle}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
         aria-label="Toggle task"
         className={cn(
           "mt-0.5 h-5 w-5 rounded-md border flex items-center justify-center transition-all",
