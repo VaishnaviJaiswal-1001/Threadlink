@@ -23,6 +23,7 @@ const workflowRoutes = require('./routes/workflowRoutes');
 const activityRoutes = require('./routes/activityRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const onboardingRoutes = require('./routes/onboardingRoutes');
+const gcalRoutes = require('./routes/gcalRoutes');
 const { swaggerUi, swaggerDocs } = require('./swagger');
 
 const app = express();
@@ -62,6 +63,10 @@ app.use('/api/workflows', workflowRoutes);
 app.use('/api/activity', activityRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/gcal', gcalRoutes);
+
+const aiRoutes = require('./routes/aiRoutes');
+app.use('/api/ai', aiRoutes);
 
 // Error Handling Middleware
 app.use(notFound);
@@ -95,7 +100,12 @@ io.on('connection', (socket) => {
   });
 });
 
+const { startMailbot } = require('./services/mailbotService');
+
 const PORT = process.env.PORT || 5000;
+
+// Initialize background services
+startMailbot();
 
 httpServer.listen(PORT, () => {
   logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);

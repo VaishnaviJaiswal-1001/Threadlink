@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
   googleId: { type: String, sparse: true },
   profilePic: { type: String, default: null }, // Cloudinary URL or /uploads path
   onboardingCompleted: { type: Boolean, default: false },
+  phone: { type: String, default: null }, // WhatsApp phone number
+  resumeFileName: { type: String, default: null },
+  resumeText: { type: String, default: null },
+  autoReplyEnabled: { type: Boolean, default: true },
   selectedApps: [{ type: String, enum: ['gmail', 'slack', 'gcal', 'gdrive'] }],
 }, { timestamps: true });
 

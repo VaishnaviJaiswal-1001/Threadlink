@@ -6,7 +6,10 @@ interface User {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   profilePic?: string;
+  resumeFileName?: string;
+  autoReplyEnabled?: boolean;
   onboardingCompleted: boolean;
 }
 

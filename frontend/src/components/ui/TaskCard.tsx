@@ -5,16 +5,26 @@ import { cn } from "@/lib/utils";
 import { Task } from "@/lib/mockData";
 import { PriorityBadge, SourcePill } from "./PriorityBadges";
 
-export const TaskCard = ({ task, onClick }: { task: Task; onClick?: () => void }) => {
+export interface ExtendedTask extends Task {
+  isAlreadyAdded?: boolean;
+}
+
+export const TaskCard = ({ task, onClick, onToggle }: { task: ExtendedTask; onClick?: () => void; onToggle?: (done: boolean) => void }) => {
   const [done, setDone] = useState(!!task.done);
   const [flash, setFlash] = useState(false);
 
   const toggle = () => {
-    if (!done) {
+    const newDone = !done;
+    if (newDone) {
       setFlash(true);
-      setTimeout(() => setFlash(false), 700);
+      setTimeout(() => {
+        setFlash(false);
+        if (onToggle) onToggle(newDone);
+      }, 700); // Wait for flash animation before triggering the callback
+    } else {
+      if (onToggle) onToggle(newDone);
     }
-    setDone(!done);
+    setDone(newDone);
   };
 
   return (
@@ -52,6 +62,11 @@ export const TaskCard = ({ task, onClick }: { task: Task; onClick?: () => void }
             {task.deadline}
           </span>
           <SourcePill source={task.source} />
+          {task.isAlreadyAdded && (
+            <span className="ml-auto text-[11px] font-medium bg-surface text-text-secondary px-2 py-0.5 rounded-full border border-border">
+              Already Added
+            </span>
+          )}
         </div>
       </div>
     </motion.div>

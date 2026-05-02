@@ -83,7 +83,42 @@ const googleCallback = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  res.json(ApiResponse.success(req.user, 'Current user fetched'));
+  const user = await User.findById(req.user._id);
+  res.json(ApiResponse.success(user, 'Current user fetched'));
 });
 
-module.exports = { signup, login, logout, refresh, googleCallback, getMe };
+const updateProfile = asyncHandler(async (req, res) => {
+  const { name, email, phone, autoReplyEnabled } = req.body;
+  const updates = {};
+  if (name !== undefined) updates.name = name;
+  if (email !== undefined) updates.email = email;
+  if (phone !== undefined) updates.phone = phone;
+  if (autoReplyEnabled !== undefined) updates.autoReplyEnabled = autoReplyEnabled;
+
+  const user = await User.findByIdAndUpdate(req.user._id, updates, { new: true });
+  res.json(ApiResponse.success(user, 'Profile updated successfully'));
+});
+
+const uploadResume = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json(ApiResponse.error(ERROR_CODES.VALIDATION_ERROR, 'Please upload a resume file'));
+  }
+
+  // Save the path to the user's document
+  const resumeFileName = req.file.filename;
+  
+  // Here we would normally extract text from PDF/DOCX using a library like pdf-parse
+  // For the sake of this feature, we'll pretend we extracted it, or just store the filename
+  const user = await User.findByIdAndUpdate(
+    req.user._id, 
+    { 
+      resumeFileName: resumeFileName,
+      resumeText: `Extracted text from ${req.file.originalname}` // Mock extracted text
+    }, 
+    { new: true }
+  );
+
+  res.json(ApiResponse.success({ user, filename: req.file.originalname }, 'Resume uploaded successfully'));
+});
+
+module.exports = { signup, login, logout, refresh, googleCallback, getMe, updateProfile, uploadResume };

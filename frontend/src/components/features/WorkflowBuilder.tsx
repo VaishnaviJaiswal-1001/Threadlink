@@ -1,20 +1,56 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, X } from "lucide-react";
+import { ArrowDown, X, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { GradientButton, GhostButton } from "@/components/ui/GradientButton";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
+import { useToast } from "@/hooks/use-toast";
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-const SOURCES = ["Gmail", "Slack", "Calendar", "Drive"];
-const CONDITIONS = ["contains keyword", "new message", "mentioned", "shared with me"];
-const ACTIONS = ["Create task", "Notify", "Schedule", "Summarize"];
+const SOURCES = [
+  { label: "Gmail", value: "gmail" },
+  { label: "Calendar", value: "gcal" }
+];
+
+const ACTIONS = [
+  { label: "Create task", value: "create_task" },
+  { label: "Summarize", value: "summarize" },
+  { label: "Notify", value: "notify" }
+];
 
 export const WorkflowBuilder = ({ open, onClose }: Props) => {
   const [name, setName] = useState("Untitled workflow");
+  const [app, setApp] = useState("gmail");
+  const [condition, setCondition] = useState("");
+  const [actionType, setActionType] = useState("create_task");
+  const [priority, setPriority] = useState("Normal");
+  
   const [showConfig, setShowConfig] = useState(false);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        name,
+        trigger: { app, condition },
+        action: { type: actionType, priority }
+      };
+      return await api.post("/workflows", payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workflows"] });
+      toast({ title: "Workflow created", description: "Your new AI workflow is active." });
+      onClose();
+    },
+    onError: (err: any) => {
+      toast({ title: "Failed to create workflow", description: err.response?.data?.message || "Something went wrong", variant: "destructive" });
+    }
+  });
 
   return (
     <AnimatePresence>
@@ -51,13 +87,10 @@ export const WorkflowBuilder = ({ open, onClose }: Props) => {
               <div className="rounded-xl border border-border p-4 bg-card shadow-card-sm">
                 <div className="text-gradient-brand text-[12px] font-bold tracking-widest mb-3">IF</div>
                 <div className="space-y-2">
-                  <select className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
-                    {SOURCES.map((s) => <option key={s}>{s}</option>)}
+                  <select value={app} onChange={e => setApp(e.target.value)} className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
+                    {SOURCES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                   </select>
-                  <select className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
-                    {CONDITIONS.map((s) => <option key={s}>{s}</option>)}
-                  </select>
-                  <input placeholder="Value (e.g. urgent)" className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]" />
+                  <input value={condition} onChange={e => setCondition(e.target.value)} placeholder="Condition (e.g. contains urgent, is from boss)" className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]" />
                 </div>
               </div>
 
@@ -68,12 +101,11 @@ export const WorkflowBuilder = ({ open, onClose }: Props) => {
               <div className="rounded-xl border border-border p-4 bg-card shadow-card-sm">
                 <div className="text-gradient-brand text-[12px] font-bold tracking-widest mb-3">THEN</div>
                 <div className="space-y-2">
-                  <select onChange={() => setShowConfig(true)} className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
-                    {ACTIONS.map((s) => <option key={s}>{s}</option>)}
+                  <select value={actionType} onChange={e => { setActionType(e.target.value); setShowConfig(true); }} className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
+                    {ACTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                   </select>
-                  <input placeholder="Target (e.g. #channel, list)" className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]" />
                   <AnimatePresence>
-                    {showConfig && (
+                    {showConfig && actionType === 'create_task' && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -81,11 +113,11 @@ export const WorkflowBuilder = ({ open, onClose }: Props) => {
                         className="overflow-hidden"
                       >
                         <div className="pt-2 space-y-2">
-                          <input placeholder="Note / template" className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]" />
-                          <select className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
-                            <option>Priority: Normal</option>
-                            <option>Priority: High</option>
-                            <option>Priority: Urgent</option>
+                          <select value={priority} onChange={e => setPriority(e.target.value)} className="w-full h-10 px-3 rounded-md border border-border bg-background text-[14px]">
+                            <option value="Normal">Priority: Normal</option>
+                            <option value="High">Priority: High</option>
+                            <option value="Urgent">Priority: Urgent</option>
+                            <option value="Low">Priority: Low</option>
                           </select>
                         </div>
                       </motion.div>
@@ -95,8 +127,10 @@ export const WorkflowBuilder = ({ open, onClose }: Props) => {
               </div>
             </div>
             <div className="p-6 border-t border-border space-y-2">
-              <GradientButton fullWidth onClick={onClose}>Save workflow</GradientButton>
-              <GhostButton className="w-full">Test this workflow</GhostButton>
+              <GradientButton fullWidth onClick={() => createMutation.mutate()} disabled={createMutation.isPending || !condition}>
+                {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Save workflow
+              </GradientButton>
             </div>
           </motion.aside>
         </>

@@ -16,9 +16,7 @@ export const PriorityBadge = ({ priority }: { priority: Priority }) => (
 
 const SOURCE_COLORS: Record<Source, string> = {
   Gmail: "text-brand-red",
-  Slack: "text-[#7C3AED]",
   Calendar: "text-brand-blue",
-  Drive: "text-brand-yellow",
 };
 
 export const SourcePill = ({ source }: { source: Source }) => (

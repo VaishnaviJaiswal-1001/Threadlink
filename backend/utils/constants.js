@@ -1,7 +1,7 @@
 module.exports = {
   PRIORITY_LEVELS: ['Urgent', 'High', 'Normal', 'Low'],
-  APP_IDS: ['gmail', 'slack', 'gcal', 'gdrive'],
-  SOURCE_NAMES: ['Gmail', 'Slack', 'Calendar', 'Drive', 'Manual', 'AI', 'System'],
+  APP_IDS: ['gmail', 'gcal'],
+  SOURCE_NAMES: ['Gmail', 'Calendar', 'Manual', 'AI', 'System'],
   ERROR_CODES: {
     VALIDATION_ERROR: 'VALIDATION_ERROR',
     UNAUTHORIZED: 'UNAUTHORIZED',

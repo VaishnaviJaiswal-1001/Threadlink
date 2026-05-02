@@ -10,7 +10,7 @@ const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   priority: z.enum(['Urgent', 'High', 'Normal', 'Low']).optional(),
   deadline: z.string().optional(),
-  source: z.enum(['Gmail', 'Slack', 'Calendar', 'Drive', 'Manual']).optional(),
+  source: z.enum(['Gmail', 'Calendar', 'Manual']).optional(),
   time: z.string().optional(),
   externalId: z.string().optional()
 });

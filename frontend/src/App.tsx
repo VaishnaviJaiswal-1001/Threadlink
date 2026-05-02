@@ -15,6 +15,7 @@ import Workflows from "./pages/Workflows.tsx";
 import Activity from "./pages/Activity.tsx";
 import Settings from "./pages/Settings.tsx";
 import GmailInbox from "./pages/GmailInbox.tsx";
+import CalendarView from "./pages/CalendarView.tsx";
 import { ChatbotButton } from "./components/features/ChatbotButton";
 
 import { AuthProvider } from "./contexts/AuthContext";
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/activity" element={<Activity />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/apps/gmail" element={<GmailInbox />} />
+              <Route path="/calendar" element={<CalendarView />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

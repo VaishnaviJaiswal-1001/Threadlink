@@ -49,7 +49,17 @@ const getEmailHtml = (payload: any): string => {
   return html || (text ? `<pre style="font-family: sans-serif; white-space: pre-wrap;">${text}</pre>` : "No content available.");
 };
 
-export const EmailViewerModal = ({ emailId, onClose }: { emailId: string; onClose: () => void }) => {
+export const EmailViewerModal = ({ 
+  emailId, 
+  onClose,
+  onTaskAdded,
+  isAlreadyTask
+}: { 
+  emailId: string; 
+  onClose: () => void;
+  onTaskAdded?: () => void;
+  isAlreadyTask?: boolean;
+}) => {
   const { data: selectedEmailData, isLoading: isLoadingEmail } = useQuery({
     queryKey: ["gmail-message", emailId],
     queryFn: async () => {
@@ -58,6 +68,26 @@ export const EmailViewerModal = ({ emailId, onClose }: { emailId: string; onClos
     },
     enabled: !!emailId,
   });
+
+  const handleAddTask = async () => {
+    if (!selectedEmailData) return;
+    
+    const subject = selectedEmailData.payload?.headers?.find((h: any) => h.name === 'Subject')?.value || "(No Subject)";
+    const snippet = selectedEmailData.snippet;
+    
+    try {
+      await api.post("/tasks", {
+        title: subject,
+        priority: "Normal",
+        source: "Gmail",
+        externalId: emailId,
+        description: snippet
+      });
+      if (onTaskAdded) onTaskAdded();
+    } catch (err) {
+      console.error("Failed to add task", err);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-sm">
@@ -78,12 +108,26 @@ export const EmailViewerModal = ({ emailId, onClose }: { emailId: string; onClos
             </button>
             <h2 className="text-[16px] font-semibold">Message</h2>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-2 rounded-md hover:bg-background transition-colors text-text-secondary hover:text-foreground"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {!isAlreadyTask ? (
+              <button 
+                onClick={handleAddTask}
+                className="px-4 py-1.5 text-[13px] font-medium rounded-md bg-brand-blue text-white hover:bg-brand-blue/90 transition-colors"
+              >
+                Add it to task
+              </button>
+            ) : (
+              <span className="px-3 py-1.5 text-[13px] font-medium rounded-md bg-surface text-text-muted border border-border">
+                Already added
+              </span>
+            )}
+            <button 
+              onClick={onClose}
+              className="p-2 rounded-md hover:bg-background transition-colors text-text-secondary hover:text-foreground"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
         </div>
 
         {/* Email Content */}

@@ -9,7 +9,7 @@ const router = express.Router();
 const workflowSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   trigger: z.object({
-    app: z.enum(['gmail', 'slack', 'gcal', 'gdrive']),
+    app: z.enum(['gmail', 'gcal']),
     condition: z.string().optional()
   }),
   action: z.object({

@@ -8,7 +8,7 @@ import { GradientText } from "@/components/ui/GradientText";
 import { FlowVisual } from "@/components/features/FlowVisual";
 
 const features = [
-  { Icon: Plug, title: "Connect once, sync forever", desc: "One-click integrations with Gmail, Slack, Calendar, Drive — kept fresh in real-time.", color: "linear-gradient(135deg,#1A6CF5,#2BB74A)" },
+  { Icon: Plug, title: "Connect once, sync forever", desc: "One-click integrations with Gmail and Calendar — kept fresh in real-time.", color: "linear-gradient(135deg,#1A6CF5,#2BB74A)" },
   { Icon: Zap, title: "If this, then that — no code", desc: "Build automations in natural language. Threadlink turns intent into reliable workflows.", color: "linear-gradient(135deg,#2BB74A,#F5C800)" },
   { Icon: Brain, title: "AI that knows your priorities", desc: "Context-aware suggestions, urgent-task detection, and smart day planning.", color: "linear-gradient(135deg,#E8381A,#F5861A)" },
 ];
@@ -45,7 +45,7 @@ const Index = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-5 text-[18px] text-text-secondary max-w-xl mx-auto leading-relaxed"
             >
-              Threadlink connects Gmail, Slack, Calendar, and Drive — then automates the gaps so you can focus on what actually matters.
+              Threadlink connects Gmail and Calendar — then automates the gaps so you can focus on what actually matters.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}

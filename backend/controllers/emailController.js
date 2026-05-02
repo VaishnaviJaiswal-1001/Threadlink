@@ -4,9 +4,9 @@ const gmailService = require('../services/gmailService');
 const { ERROR_CODES } = require('../utils/constants');
 
 const getInbox = asyncHandler(async (req, res) => {
-  const { pageToken } = req.query;
+  const { pageToken, q } = req.query;
   try {
-    const inbox = await gmailService.getInbox(req.user._id, pageToken);
+    const inbox = await gmailService.getInbox(req.user._id, pageToken, q);
     res.json(ApiResponse.success(inbox, 'Inbox fetched'));
   } catch (error) {
     if (error.message.includes('not connected')) {
@@ -27,9 +27,12 @@ const sendEmail = asyncHandler(async (req, res) => {
   res.json(ApiResponse.success(result, 'Email sent successfully'));
 });
 
+const { processUserInbox } = require('../services/mailbotService');
+
 const syncInbox = asyncHandler(async (req, res) => {
-  const result = await gmailService.syncInbox(req.user._id);
-  res.json(ApiResponse.success(result, 'Inbox synced'));
+  // Trigger mailbot sync on-demand for this user
+  await processUserInbox(req.user._id);
+  res.json(ApiResponse.success(null, 'Mailbot sync triggered and completed'));
 });
 
 const getOAuthUrl = asyncHandler(async (req, res) => {

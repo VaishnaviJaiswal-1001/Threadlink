@@ -1,16 +1,32 @@
 import { useState } from "react";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, Loader2, Trash2 } from "lucide-react";
 import { GradientButton } from "@/components/ui/GradientButton";
-import { MOCK_WORKFLOWS } from "@/lib/mockData";
 import { WorkflowBuilder } from "@/components/features/WorkflowBuilder";
 import { cn } from "@/lib/utils";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 const Workflows = () => {
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(MOCK_WORKFLOWS);
+  const queryClient = useQueryClient();
 
-  const toggle = (id: string) =>
-    setItems((x) => x.map((w) => (w.id === id ? { ...w, on: !w.on } : w)));
+  const { data: workflows = [], isLoading } = useQuery({
+    queryKey: ["workflows"],
+    queryFn: async () => {
+      const res = await api.get("/workflows");
+      return res.data.data;
+    },
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async (id: string) => await api.patch(`/workflows/${id}/toggle`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workflows"] }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => await api.delete(`/workflows/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["workflows"] }),
+  });
 
   return (
     <div className="px-6 md:px-10 py-8 md:py-10 max-w-[1100px] mx-auto">
@@ -23,21 +39,25 @@ const Workflows = () => {
       </div>
 
       <div className="bg-card border border-border rounded-xl shadow-card-sm overflow-hidden">
-        {items.map((w, i) => (
+        {isLoading ? (
+          <div className="py-12 flex justify-center"><Loader2 className="h-6 w-6 animate-spin text-brand-blue" /></div>
+        ) : workflows.length === 0 ? (
+          <div className="py-12 text-center text-text-secondary">No workflows created yet.</div>
+        ) : workflows.map((w: any, i: number) => (
           <div
-            key={w.id}
+            key={w._id}
             className={cn(
               "grid grid-cols-[1fr_auto] sm:grid-cols-[1.4fr_1.4fr_1.4fr_auto_auto] items-center gap-4 px-5 py-4",
-              i !== items.length - 1 && "border-b border-border",
+              i !== workflows.length - 1 && "border-b border-border",
             )}
           >
             <div className="font-medium text-[15px]">{w.name}</div>
-            <div className="hidden sm:block text-[13px] text-text-secondary">IF · {w.trigger}</div>
-            <div className="hidden sm:block text-[13px] text-text-secondary">THEN · {w.action}</div>
+            <div className="hidden sm:block text-[13px] text-text-secondary">IF · {w.trigger?.app} {w.trigger?.condition}</div>
+            <div className="hidden sm:block text-[13px] text-text-secondary">THEN · {w.action?.type?.replace('_', ' ')}</div>
             <button
               role="switch"
               aria-checked={w.on}
-              onClick={() => toggle(w.id)}
+              onClick={() => toggleMutation.mutate(w._id)}
               className={cn(
                 "relative h-6 w-11 rounded-full transition-colors",
                 w.on ? "bg-gradient-brand" : "bg-elevated",
@@ -50,8 +70,8 @@ const Workflows = () => {
                 )}
               />
             </button>
-            <button className="h-9 w-9 rounded-md hover:bg-elevated flex items-center justify-center text-text-secondary hover:text-foreground" aria-label="Edit">
-              <Pencil className="h-4 w-4" />
+            <button onClick={() => deleteMutation.mutate(w._id)} className="h-9 w-9 rounded-md hover:bg-elevated flex items-center justify-center text-text-secondary hover:text-red-500" aria-label="Delete">
+              <Trash2 className="h-4 w-4" />
             </button>
           </div>
         ))}

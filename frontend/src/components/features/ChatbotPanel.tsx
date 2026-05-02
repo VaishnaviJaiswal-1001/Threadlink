@@ -19,15 +19,20 @@ export const ChatbotPanel = ({ open, onClose }: { open: boolean; onClose: () => 
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, thinking]);
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     if (!text.trim()) return;
     setMessages((m) => [...m, { role: "user", text }]);
     setInput("");
     setThinking(true);
-    setTimeout(() => {
+    try {
+      const { api } = await import('@/lib/api');
+      const res = await api.post('/ai/chat', { message: text });
+      setMessages((m) => [...m, { role: "bot", text: res.data.data.reply }]);
+    } catch (err: any) {
+      setMessages((m) => [...m, { role: "bot", text: "Sorry, I ran into an error processing that." }]);
+    } finally {
       setThinking(false);
-      setMessages((m) => [...m, { role: "bot", text: "Got it — I'll get on that. (demo response)" }]);
-    }, 1100);
+    }
   };
 
   return (

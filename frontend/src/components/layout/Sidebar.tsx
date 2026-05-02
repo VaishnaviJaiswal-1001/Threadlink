@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, CalendarDays, Workflow, Sparkles, MessageCircle, Settings, LogOut, Menu } from "lucide-react";
+import { Home, CalendarDays, Calendar, Workflow, Sparkles, MessageCircle, Settings, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 import logo from "@/assets/threadlink-logo.png";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,8 @@ import { APPS } from "@/lib/constants";
 const items = [
   { label: "Home", href: "/dashboard", Icon: Home },
   { label: "Today", href: "/today", Icon: CalendarDays },
+  { label: "Calendar", href: "/calendar", Icon: Calendar },
   { label: "Workflows", href: "/workflows", Icon: Workflow },
-  { label: "AI Suggestions", href: "/dashboard?panel=ai", Icon: Sparkles },
-  { label: "Chatbot", href: "/dashboard?panel=chat", Icon: MessageCircle },
   { label: "Settings", href: "/settings", Icon: Settings },
 ];
 
@@ -71,6 +70,21 @@ export const Sidebar = () => {
             <div className="space-y-1">
               {connectedApps.map((app) => {
                 const Icon = app.icon;
+                if (app.id === "gcal") {
+                  return (
+                    <a
+                      key={app.id}
+                      href="https://calendar.google.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative flex items-center gap-3 px-3 py-2.5 rounded-md text-[14px] font-medium transition-colors text-text-secondary hover:text-foreground hover:bg-surface"
+                    >
+                      <Icon className="h-[18px] w-[18px]" style={{ color: app.color }} />
+                      <span>{app.name}</span>
+                    </a>
+                  );
+                }
+
                 return (
                   <NavLink
                     key={app.id}

@@ -14,6 +14,7 @@ const Onboarding = () => {
   const [step, setStep] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
   const [connected, setConnected] = useState<string[]>([]);
+  const [phone, setPhone] = useState("");
   const [shaking, setShaking] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -36,9 +37,9 @@ const Onboarding = () => {
       try {
         const res = await api.get("/onboarding/status");
         if (res.data.success) {
-          const { step, selectedApps, connectedApps, onboardingCompleted } = res.data.data;
+          const { step, selectedApps, connectedApps, phone, onboardingCompleted } = res.data.data;
           
-          if (onboardingCompleted || step === 3) {
+          if (onboardingCompleted || step === 4) {
             finishOnboarding();
             return;
           }
@@ -46,6 +47,9 @@ const Onboarding = () => {
           setStep(step);
           setSelected(selectedApps || []);
           setConnected(connectedApps || []);
+          if (phone) {
+            setPhone(phone.startsWith('+91') ? phone.substring(3).trim() : phone);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch onboarding status", err);
@@ -86,6 +90,24 @@ const Onboarding = () => {
       setShaking(id);
       toast({ title: "Couldn't connect", description: "Please try again.", variant: "destructive" });
       setTimeout(() => setShaking(null), 500);
+    }
+  };
+
+  const handleAppsConnectedContinue = () => {
+    setStep(3);
+  };
+
+  const savePhoneAndContinue = async () => {
+    if (!phone || phone.length < 10) {
+      toast({ variant: "destructive", title: "Invalid Phone", description: "Please enter a valid 10-digit phone number." });
+      return;
+    }
+    try {
+      const fullPhone = phone.startsWith('+91') ? phone : `+91${phone.replace(/\D/g, '')}`;
+      await api.post("/onboarding/phone", { phone: fullPhone });
+      finishOnboarding();
+    } catch (err) {
+      toast({ variant: "destructive", title: "Error", description: "Failed to save phone number." });
     }
   };
 
@@ -165,7 +187,41 @@ const Onboarding = () => {
                   ))}
                 </div>
                 <div className="mt-8 flex justify-end">
-                  <GradientButton onClick={finishOnboarding}>
+                  <GradientButton onClick={handleAppsConnectedContinue}>
+                    Continue <ArrowRight className="h-4 w-4" />
+                  </GradientButton>
+                </div>
+              </motion.div>
+            )}
+
+            {step === 3 && (
+              <motion.div key="s3" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}>
+                <h2 className="text-[24px] font-semibold text-center">Enable WhatsApp Reminders</h2>
+                <p className="text-center text-text-secondary text-[14px] mt-1">Get instantly notified about important actionable emails.</p>
+                <div className="mt-8 flex flex-col items-center">
+                  <div className="w-full max-w-sm">
+                    <label className="block text-[13px] font-medium text-text-secondary mb-2">WhatsApp Phone Number</label>
+                    <div className="flex items-center relative">
+                      <span className="absolute left-4 text-[14px] text-text-secondary font-medium">+91</span>
+                      <input 
+                        type="text" 
+                        value={phone} 
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} 
+                        placeholder="10-digit number" 
+                        maxLength={10}
+                        className="w-full h-12 pl-12 pr-4 rounded-xl border border-border bg-background focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all"
+                      />
+                    </div>
+                    <p className="text-[12px] text-text-muted mt-2 text-center">
+                      Used only to send you important tasks. Standard messaging rates apply.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-10 flex justify-between items-center">
+                  <button onClick={finishOnboarding} className="text-[14px] text-text-secondary hover:text-foreground font-medium transition-colors">
+                    Skip for now
+                  </button>
+                  <GradientButton onClick={savePhoneAndContinue}>
                     Finish setup <ArrowRight className="h-4 w-4" />
                   </GradientButton>
                 </div>

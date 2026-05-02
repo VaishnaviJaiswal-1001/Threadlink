@@ -1,5 +1,5 @@
 export type Priority = "Urgent" | "High" | "Normal" | "Low";
-export type Source = "Gmail" | "Slack" | "Calendar" | "Drive";
+export type Source = "Gmail" | "Calendar";
 
 export interface Task {
   id: string;

@@ -13,9 +13,10 @@ interface AppCardProps {
   shake?: boolean;
   onClick?: () => void;
   rightSlot?: React.ReactNode;
+  bottomSlot?: React.ReactNode;
 }
 
-export const AppCard = ({ name, color, tint, Icon, selected, connected, shake, onClick, rightSlot }: AppCardProps) => (
+export const AppCard = ({ name, color, tint, Icon, selected, connected, shake, onClick, rightSlot, bottomSlot }: AppCardProps) => (
   <motion.div
     whileHover={{ y: -2 }}
     onClick={onClick}
@@ -35,13 +36,18 @@ export const AppCard = ({ name, color, tint, Icon, selected, connected, shake, o
     <div className="flex-1 min-w-0">
       <div className="font-semibold text-[15px]">{name}</div>
       {connected && (
-        <div className="mt-0.5 flex items-center gap-1.5 text-[12px] text-brand-green font-medium">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-          Connected
+        <div className="mt-0.5 flex flex-col gap-2">
+          <div className="flex items-center gap-1.5 text-[12px] text-brand-green font-medium">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
+            Connected
+          </div>
+          {bottomSlot}
         </div>
       )}
     </div>
-    {connected ? (
+    {rightSlot !== undefined ? (
+      rightSlot
+    ) : connected ? (
       <div className="h-7 w-7 rounded-full bg-brand-green text-white flex items-center justify-center">
         <Check className="h-4 w-4" strokeWidth={3} />
       </div>
@@ -50,7 +56,7 @@ export const AppCard = ({ name, color, tint, Icon, selected, connected, shake, o
         <Check className="h-3.5 w-3.5" strokeWidth={3} />
       </div>
     ) : (
-      rightSlot ?? <div className="h-6 w-6 rounded-md border-2 border-border" />
+      <div className="h-6 w-6 rounded-md border-2 border-border" />
     )}
   </motion.div>
 );

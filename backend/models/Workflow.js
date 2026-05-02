@@ -4,7 +4,7 @@ const workflowSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   name: { type: String, required: true },
   trigger: {
-    app: { type: String, enum: ['gmail', 'slack', 'gcal', 'gdrive'] },
+    app: { type: String, enum: ['gmail', 'gcal'] },
     condition: { type: String } // e.g. 'contains "urgent"', 'mentioned in channel'
   },
   action: {
