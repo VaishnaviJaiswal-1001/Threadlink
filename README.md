@@ -6,7 +6,7 @@
 
 📦 **GitHub Repo:** https://github.com/VaishnaviJaiswal-1001/Threadlink
 
-**Demo Video** [https://youtu.be/j08WEkRd8Gk](https://youtu.be/j08WEkRd8Gk)
+**Demo Video** ![https://youtu.be/j08WEkRd8Gk](https://youtu.be/j08WEkRd8Gk)
 
 ---
 
