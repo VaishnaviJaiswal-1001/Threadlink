@@ -1,379 +1,195 @@
----
-
 # 🚀 Threadlink
 
 ## A Modern Team Collaboration & Task Management Platform
 
-**🌐 Live Application:** [https://threadlink-ivory.vercel.app/](https://threadlink-ivory.vercel.app/)
+**🌐 Live Application:** [https://threadlink-ivory.vercel.app/](https://threadlink-ivory.vercel.app/)  
 **📦 Repository:** [https://github.com/VaishnaviJaiswal-1001/Threadlink](https://github.com/VaishnaviJaiswal-1001/Threadlink)
 
 ---
 
 ## 🧭 Overview
 
-**Threadlink** is a scalable and intuitive **team collaboration platform** designed to streamline task management, enhance productivity, and provide real-time visibility into team workflows.
+**Threadlink** is an AI-powered, scalable, and intuitive **collaboration platform** designed to streamline task management, automate your workflow, and provide real-time visibility into your day.
 
-Built with a modern tech stack, Threadlink enables teams to:
+Built with a modern tech stack, Threadlink connects directly to your Gmail and Google Calendar to extract tasks, set deadlines, and automate responses using cutting-edge AI (Groq Llama 3). 
 
-* Organize work efficiently
-* Track progress in real-time
-* Collaborate seamlessly across projects
-
-It serves as a lightweight yet powerful alternative to traditional tools like Notion, Trello, and Asana.
+It serves as a lightweight, intelligent alternative to traditional tools like Notion, Trello, and Asana.
 
 ---
 
 ## ✨ Core Features
 
-### 🧑‍💼 Unified Team Dashboard
+### 🤖 AI-Powered Automation
+* **Smart Mailbot:** Automatically reads incoming emails, categorizes them, and generates actionable tasks.
+* **Auto-Replies:** Generates context-aware, professional email draft replies.
+* **AI Chat Assistant:** A conversational AI that understands your tasks, workflows, and schedule.
 
-* Real-time overview of team activities
-* Task insights and performance tracking
-* Clean and minimal UI for better focus
+### 🧑‍💼 Unified Team Dashboard
+* Real-time overview of your daily agenda and tasks.
+* Clean, minimalist, glassmorphic UI for better focus.
+* Seamless integrations with Google Calendar.
 
 ### 📋 Advanced Task Management
-
-* Create, assign, and manage tasks
-* Priority and deadline management
-* Task lifecycle tracking (Pending → In Progress → Completed)
-
-### 📊 Progress & Analytics
-
-* Visual tracking of task completion
-* Team productivity insights
-* Performance monitoring
-
-### 👥 Team Collaboration
-
-* Multi-user environment
-* Role-based task ownership
-* Transparent workflow tracking
-
-### ⚡ High Performance UX
-
-* Fast, responsive UI
-* Optimized rendering
-* Smooth navigation experience
+* Custom automation workflows (Trigger → Action).
+* Priority and deadline management.
+* Task lifecycle tracking (Pending → In Progress → Completed).
 
 ---
 
 ## 🏗️ System Architecture
 
-```id="arch123"
-Client (React)  →  API Layer (Node/Express)  →  Database
-```
 
-* **Frontend:** Handles UI/UX and user interaction
-* **Backend:** Manages business logic and APIs
-* **Database:** Stores tasks, users, and team data
+Client (React/Vite)  →  API Layer (Node/Express)  →  Database (MongoDB)
 
----
+# Frontend: Handles UI/UX, animations, and user interaction.
+
+# Backend: Manages business logic, AI interactions, OAuth, and APIs.
+
+# Database: Stores tasks, workflows, users, and app configurations.
 
 ## 🛠️ Tech Stack
 
-### Frontend
+# Frontend
+* React.js (Vite)
+* Tailwind CSS & Framer Motion
+* 
+# Backend
+* Node.js & Express.js
+* Mongoose
+* Groq API (Llama 3 Model)
+# Database & Deployment
+* MongoDB Atlas
+* Vercel (Frontend Hosting)
+* Render (Backend API Hosting)
 
-* React.js
-* Tailwind CSS
-* Vite / Next.js (update if needed)
+# 📁 Project Structure
 
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MongoDB / Firebase *(update accordingly)*
-
-### Deployment
-
-* Vercel (Frontend)
-* Backend Hosting (if applicable)
-
----
-
-## 📁 Project Structure
-
-```id="proj001"
 Threadlink/
-├── client/              # Frontend application
-├── server/              # Backend services (if included)
-├── components/          # Reusable UI components
-├── pages/               # Application views
-├── services/            # API calls & logic
-├── utils/               # Helper functions
-├── public/              # Static assets
-└── config/              # Environment & configuration
-```
-
----
+├── frontend/            # React/Vite application
+├── backend/             # Node/Express API services
+├── README.md            # Documentation
 
 ## ⚙️ Getting Started
-
-### 1. Clone Repository
-
-```bash id="clone01"
+1. Clone Repository
+bash
 git clone https://github.com/VaishnaviJaiswal-1001/Threadlink.git
 cd Threadlink
-```
+2. Install Dependencies
+You will need to install dependencies for both the frontend and backend.
 
-### 2. Install Dependencies
-
-```bash id="install01"
+bash
+# Install backend dependencies
+cd backend
 npm install
-```
+# Install frontend dependencies
+cd ../frontend
+npm install
+3. Setup Environment Variables
+Create a .env file in the backend/ directory:
 
-### 3. Setup Environment Variables
-
-Create a `.env` file in the root:
-
-```# =========================
+env
+bash
+# =========================
 # 🌐 Server Configuration
 # =========================
 PORT=5000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:8080
-
 # =========================
 # 🗄️ Database (MongoDB)
 # =========================
 MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/threadlink
-
 # =========================
 # 🔐 Authentication (JWT)
 # =========================
 JWT_SECRET=your_64_char_random_secret_here
 JWT_ACCESS_EXPIRES=15m
 JWT_REFRESH_EXPIRES=7d
-
+# =========================
+# 🤖 AI Configuration (Groq)
+# =========================
+GROQ_API_KEY=your_groq_api_key_here
 # =========================
 # 🔑 Google OAuth (Login)
 # =========================
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
 GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
-
 # =========================
 # 📧 Gmail API (Email Automation)
 # =========================
-GMAIL_CLIENT_ID=
-GMAIL_CLIENT_SECRET=
+GMAIL_CLIENT_ID=your_client_id
+GMAIL_CLIENT_SECRET=your_client_secret
 GMAIL_REDIRECT_URI=http://localhost:5000/api/email/oauth/callback
-
 # =========================
 # 📁 File Upload
 # =========================
 UPLOAD_DIR=uploads/
 MAX_FILE_SIZE_MB=5
-
 # =========================
 # 🚦 Rate Limiting
 # =========================
 AUTH_RATE_LIMIT_WINDOW_MS=900000
 AUTH_RATE_LIMIT_MAX=10
 GENERAL_RATE_LIMIT_MAX=100
-```
 
----
+4. Run Development Servers
+You will need two terminal windows open.
 
-### 4. Run Development Server
+Terminal 1 (Backend):
 
-```bash id="run01"
+bash
+cd backend
 npm run dev
-```
+Terminal 2 (Frontend):
 
----
+bash
+cd frontend
+npm run dev
+🔌 API Documentation
+Base URL: https://your-backend-url/api
 
-## 🔌 API Documentation
+# 🔐 Authentication
+POST /auth/signup - Register a new user
+POST /auth/login - Login with email/password
+GET /auth/google - Initiate Google OAuth flow
+🤖 AI Engine
+POST /ai/chat - Interact with the AI context assistant
+POST /email/sync - Trigger Mailbot to fetch and parse unread emails
+📋 Tasks & Workflows
+GET /tasks - Retrieve all user tasks
+POST /tasks - Create a new task manually
+POST /workflows - Define a new automation trigger
+🔒 Security Practices
+JWT-based secure authentication.
+Protected API routes using middleware.
+Environment variables safely omitted from version control.
+Strict input validation and sanitization using Zod.
+🚀 Deployment
+Backend (Render)
+Create a Web Service on Render.
+Set Root Directory to backend.
+Build command: npm install, Start command: node server.js.
+Inject .env variables and update OAuth callback URLs.
+Frontend (Vercel)
+Import repository to Vercel.
+Set Root Directory to frontend.
+Add VITE_API_URL environment variable pointing to your Render backend.
+Deploy! (A vercel.json is included for SPA routing).
 
-> Base URL:
+# 🤝 Contributing
+We welcome contributions to improve Threadlink!
 
-```
-https://your-backend-url/api
-```
-
----
-
-### 🔐 Authentication
-
-#### Register User
-
-```http id="api01"
-POST /auth/register
-```
-
-**Request Body:**
-
-```json id="api02"
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "123456"
-}
-```
-
----
-
-#### Login User
-
-```http id="api03"
-POST /auth/login
-```
-
-**Response:**
-
-```json id="api04"
-{
-  "token": "jwt_token",
-  "user": {
-    "id": "user_id",
-    "email": "john@example.com"
-  }
-}
-```
-
----
-
-### 📋 Tasks
-
-#### Create Task
-
-```http id="api05"
-POST /tasks
-```
-
-**Body:**
-
-```json id="api06"
-{
-  "title": "Complete UI",
-  "description": "Finish dashboard UI",
-  "priority": "high",
-  "deadline": "2026-06-01"
-}
-```
-
----
-
-#### Get All Tasks
-
-```http id="api07"
-GET /tasks
-```
-
----
-
-#### Update Task
-
-```http id="api08"
-PUT /tasks/:id
-```
-
----
-
-#### Delete Task
-
-```http id="api09"
-DELETE /tasks/:id
-```
-
----
-
-### 👥 Team
-
-#### Add Member
-
-```http id="api10"
-POST /team/add
-```
-
-#### Get Team Members
-
-```http id="api11"
-GET /team
-```
-
----
-
-## 🔒 Security Practices
-
-* JWT-based authentication
-* Secure API routes
-* Environment variable protection
-* Input validation and sanitization
-
----
-
-## 🚀 Deployment
-
-### Frontend (Vercel)
-
-* Connect GitHub repository
-* Auto-deploy on push
-
-### Backend
-
-* Deploy on platforms like:
-
-  * Render
-
-
----
-
-## 📈 Roadmap
-
-* 🔔 Real-time notifications
-* 📅 Calendar & scheduling integration
-* 📧 Gmail automation integration
-* 🤖 AI-based task prioritization
-* 📊 Advanced analytics dashboard
-
----
-
-
----
-
-## 🤝 Contributing
-
-We welcome contributions to improve Threadlink.
-
-```bash id="contri01"
+bash
 1. Fork the repository
 2. Create a feature branch (git checkout -b feature-name)
 3. Commit changes (git commit -m "Add feature")
 4. Push to branch (git push origin feature-name)
 5. Open a Pull Request
-```
 
----
+# 📜 License
+This project is licensed under the MIT License.
 
-## 📜 License
-
-This project is licensed under the **MIT License**.
-
----
-
-## 👩‍💻 Author
-
-**Vaishnavi Jaiswal, Vaishnavi maurya,Jay gautam,Pooja gond**
-GitHub: [https://github.com/VaishnaviJaiswal-1001](https://github.com/VaishnaviJaiswal-1001)
-
----
-
-## ⭐ Acknowledgment
-
-If you find this project useful, consider giving it a ⭐ on GitHub.
-
----
-
-## 💼 Final Note
-
-Threadlink is designed with scalability and simplicity in mind, making it suitable for:
-
-* Startups
-* Student teams
-* Freelancers
-* Small to mid-sized organizations
-
----
+# 👩‍💻 Authors
+Vaishnavi Jaiswal, Vaishnavi Maurya, Jay Gautam, Pooja Gond
+GitHub: https://github.com/VaishnaviJaiswal-1001
