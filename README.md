@@ -2,7 +2,7 @@
 
 # 🚀 Threadlink
 
-### A Modern Team Collaboration & Task Management Platform
+## A Modern Team Collaboration & Task Management Platform
 
 **🌐 Live Application:** [https://threadlink-ivory.vercel.app/](https://threadlink-ivory.vercel.app/)
 **📦 Repository:** [https://github.com/VaishnaviJaiswal-1001/Threadlink](https://github.com/VaishnaviJaiswal-1001/Threadlink)
