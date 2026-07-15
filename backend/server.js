@@ -68,6 +68,13 @@ app.use('/api/gcal', gcalRoutes);
 const aiRoutes = require('./routes/aiRoutes');
 app.use('/api/ai', aiRoutes);
 
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "ThreadLink Backend Running"
+    });
+});
+
 // Error Handling Middleware
 app.use(notFound);
 app.use(errorHandler);
@@ -97,13 +104,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     logger.info(`Socket disconnected: ${socket.id}`);
-  });
-});
-
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date()
   });
 });
 
