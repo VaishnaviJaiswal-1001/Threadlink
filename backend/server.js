@@ -100,6 +100,13 @@ io.on('connection', (socket) => {
   });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date()
+  });
+});
+
 const { startMailbot } = require('./services/mailbotService');
 
 const PORT = process.env.PORT || 5000;
